@@ -5,7 +5,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 // REEMPLAZA ESTA URL CON TU URL REAL DE MOCKAPI
-const API_URL = 'https://66xxxxxx.mockapi.io/recursos';
+const API_URL = 'https://6ac6bc47bea0e72cf5c9393d.mockapi.io/api/v1/recursos';
 
 export default function DocenteScreen() {
   const { user, logout } = useContext(AuthContext);
