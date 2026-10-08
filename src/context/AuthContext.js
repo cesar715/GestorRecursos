@@ -1,32 +1,16 @@
-import React, { createContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useState } from 'react';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null); // Inicia siempre en la pantalla de Login
 
-  useEffect(() => {
-    const loadSession = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem('userSession');
-        if (storedUser) setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Error cargando sesión:", error);
-      }
-    };
-    loadSession();
-  }, []);
-
-  const login = async (username, role) => {
-    const session = { username, role };
-    setUser(session);
-    await AsyncStorage.setItem('userSession', JSON.stringify(session));
+  const login = (username, role) => {
+    setUser({ username, role });
   };
 
-  const logout = async () => {
+  const logout = () => {
     setUser(null);
-    await AsyncStorage.removeItem('userSession');
   };
 
   return (
@@ -34,4 +18,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}

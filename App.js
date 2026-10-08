@@ -1,51 +1,41 @@
 import React, { useContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, View } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
-
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 import LoginScreen from './src/screens/LoginScreen';
 import DocenteScreen from './src/screens/DocenteScreen';
 import EstudianteScreen from './src/screens/EstudianteScreen';
 
-const Stack = createStackNavigator();
-
 function MainNavigator() {
   const { user } = useContext(AuthContext);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: true }}>
-        {!user ? (
-          <Stack.Screen 
-            name="Login" 
-            component={LoginScreen} 
-            options={{ title: 'Iniciar Sesión - ACAAI' }} 
-          />
-        ) : user.role === 'Docente' ? (
-          <Stack.Screen 
-            name="Docente" 
-            component={DocenteScreen} 
-            options={{ title: 'Panel Docente - Gestión de Recursos' }} 
-          />
-        ) : (
-          <Stack.Screen 
-            name="Estudiante" 
-            component={EstudianteScreen} 
-            options={{ title: 'Catálogo de Recursos - Estudiante' }} 
-          />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (!user) {
+    return <LoginScreen />;
+  }
+
+  return user.role === 'Docente' ? <DocenteScreen /> : <EstudianteScreen />;
 }
 
 export default function App() {
   return (
     <PaperProvider>
       <AuthProvider>
-        <MainNavigator />
+        <View style={styles.root}>
+          <MainNavigator />
+        </View>
       </AuthProvider>
     </PaperProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+    // Esto habilita el scroll con la rueda del mouse en navegadores web de forma nativa
+    ...(typeof document !== 'undefined' ? {
+      height: '100vh',
+      overflowY: 'auto',
+    } : {}),
+  },
+});
